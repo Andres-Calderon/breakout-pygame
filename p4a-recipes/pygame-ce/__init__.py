@@ -32,13 +32,11 @@ class PygameCERecipe(CompiledComponentsPythonRecipe):
             content = file.read()
 
         old_spawn = "distutils.ccompiler.spawn(cmd, dry_run=self.dry_run, **kwargs)"
-        if old_spawn not in content:
-            return
+        if old_spawn in content:
+            content = content.replace(old_spawn, "subprocess.check_call(cmd)")
 
-        if "import subprocess" not in content:
-            content = content.replace("import distutils.ccompiler", "import distutils.ccompiler\nimport subprocess")
-
-        content = content.replace(old_spawn, "subprocess.check_call(cmd)")
+        if "subprocess.check_call(cmd)" in content and "import subprocess" not in content:
+            content = "import subprocess\n" + content
 
         with open(setup_py, "w", encoding="utf-8") as file:
             file.write(content)
@@ -90,6 +88,7 @@ class PygameCERecipe(CompiledComponentsPythonRecipe):
     def build_compiled_components(self, arch):
         hostpython = sh.Command(self.hostpython_location)
         shprint(hostpython, "-m", "pip", "install", "setuptools==69.5.1", "-q")
+        self._patch_setup_py(arch)
         super().build_compiled_components(arch)
 
     def get_recipe_env(self, arch):
