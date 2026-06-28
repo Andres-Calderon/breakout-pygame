@@ -1,0 +1,10 @@
+dist/
+build/
+Breakout.spec
+__pycache__/
+*.pyc
+.buildozer/
+bin/
+.gradle/
+android/docker-buildozer/
+android/docker-gradle/

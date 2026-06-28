@@ -1,0 +1,27 @@
+BREAKOUT - INSTRUCCIONES PARA PYDROID 3
+======================================
+
+IMPORTANTE: Todos estos archivos deben estar en LA MISMA carpeta:
+
+  - main.py
+  - game.py
+  - entities.py
+  - config.py
+  - platform_utils.py
+
+PASOS:
+
+1. Instala Pydroid 3 desde Play Store.
+2. Menu (tres puntos) -> Pip -> instala: pygame
+3. En Pydroid, abre la carpeta "breakout" donde estan TODOS los .py
+4. Abre main.py (no copies solo este archivo)
+5. Pulsa el boton Run (triangulo amarillo)
+
+Si ves "No module named 'game'":
+- Verifica que game.py este en la misma carpeta que main.py
+- Vuelve a descomprimir breakout-android.zip completo
+
+Controles:
+- Tocar: iniciar / lanzar pelota
+- Arrastrar dedo: mover la barra
+- Juega en horizontal (gira el telefono)
