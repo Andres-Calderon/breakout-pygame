@@ -14,8 +14,8 @@ sudo apt-get install -y \
   > /dev/null
 
 echo "==> Instalando Buildozer..."
-python3 -m pip install --user --upgrade pip
-python3 -m pip install --user "buildozer==1.5.0" "Cython<3.0"
+python3 -m pip install --user --upgrade pip setuptools wheel
+python3 -m pip install --user "buildozer==1.5.0" "Cython==0.29.36"
 export PATH="$HOME/.local/bin:$PATH"
 
 echo "==> Compilando APK..."

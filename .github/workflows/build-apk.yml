@@ -31,10 +31,14 @@ jobs:
 
       - name: Install Buildozer
         run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install "buildozer==1.5.0" "Cython<3.0"
+          python3 -m pip install --upgrade pip setuptools wheel
+          python3 -m pip install "buildozer==1.5.0" "Cython==0.29.36"
 
       - name: Build APK
+        run: buildozer android clean
+        continue-on-error: true
+
+      - name: Build APK debug
         run: buildozer -v android debug
 
       - name: Upload APK
