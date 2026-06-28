@@ -1,5 +1,6 @@
 from os.path import join
 
+from pythonforandroid.logger import shprint
 from pythonforandroid.recipe import CompiledComponentsPythonRecipe
 from pythonforandroid.toolchain import current_directory
 
@@ -23,6 +24,23 @@ class PygameCERecipe(CompiledComponentsPythonRecipe):
     ]
     call_hostpython_via_targetpython = False
     install_in_hostpython = False
+
+    def _patch_setup_py(self, arch):
+        setup_py = join(self.get_build_dir(arch.arch), "setup.py")
+        with open(setup_py, encoding="utf-8") as file:
+            content = file.read()
+
+        old_spawn = "distutils.ccompiler.spawn(cmd, dry_run=self.dry_run, **kwargs)"
+        if old_spawn not in content:
+            return
+
+        if "import subprocess" not in content:
+            content = content.replace("import distutils.ccompiler", "import distutils.ccompiler\nimport subprocess")
+
+        content = content.replace(old_spawn, "subprocess.check_call(cmd)")
+
+        with open(setup_py, "w", encoding="utf-8") as file:
+            file.write(content)
 
     def prebuild_arch(self, arch):
         super().prebuild_arch(arch)
@@ -65,6 +83,13 @@ class PygameCERecipe(CompiledComponentsPythonRecipe):
                 freetype_includes="",
             )
             open("Setup", "w").write(setup_file)
+
+        self._patch_setup_py(arch)
+
+    def build_compiled_components(self, arch):
+        hostpython = self.get_hostpython(arch)
+        shprint(hostpython, "-m", "pip", "install", "setuptools==69.5.1", "-q")
+        super().build_compiled_components(arch)
 
     def get_recipe_env(self, arch):
         env = super().get_recipe_env(arch)
