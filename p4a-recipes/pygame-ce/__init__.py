@@ -1,5 +1,6 @@
 from os.path import join
 
+import sh
 from pythonforandroid.logger import shprint
 from pythonforandroid.recipe import CompiledComponentsPythonRecipe
 from pythonforandroid.toolchain import current_directory
@@ -87,7 +88,7 @@ class PygameCERecipe(CompiledComponentsPythonRecipe):
         self._patch_setup_py(arch)
 
     def build_compiled_components(self, arch):
-        hostpython = self.get_hostpython(arch)
+        hostpython = sh.Command(self.hostpython_location)
         shprint(hostpython, "-m", "pip", "install", "setuptools==69.5.1", "-q")
         super().build_compiled_components(arch)
 
